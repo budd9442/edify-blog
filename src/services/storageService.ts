@@ -59,7 +59,7 @@ class StorageService {
 
   // Create bucket if it doesn't exist (run this once)
   async createBucket(): Promise<void> {
-    const { data, error } = await supabase.storage.createBucket(this.bucketName, {
+    const { error } = await supabase.storage.createBucket(this.bucketName, {
       public: true,
       allowedMimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
       fileSizeLimit: 5242880 // 5MB

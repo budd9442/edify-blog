@@ -1,6 +1,5 @@
 import supabase from './supabaseClient';
 import { safeQuery } from './supabaseUtils';
-import { badgesService } from './badgesService';
 
 export const likesService = {
   async likeArticle(articleId: string, userId: string): Promise<void> {

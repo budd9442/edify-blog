@@ -290,7 +290,7 @@ export const editorService = {
       }
 
       // Generate unique slug from title
-      let baseSlug = draft.title
+      const baseSlug = draft.title
         .toLowerCase()
         .replace(/[^a-z0-9\s-]/g, '')
         .replace(/\s+/g, '-')

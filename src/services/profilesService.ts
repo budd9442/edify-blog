@@ -24,18 +24,17 @@ export interface ProfileUpdateData {
 export const profilesService = {
   async ensureProfileExists(userId: string, fallbackName?: string): Promise<void> {
     // Check if profile exists and has a name
-    const { data: existingProfileResult } = await safeQuery('profiles/getOne', () =>
+    const { data: existingProfile } = await safeQuery('profiles/getOne', () =>
       supabase
         .from('profiles')
         .select('id, name')
         .eq('id', userId)
         .single()
-        .then((res: any) => {
+        .then((res) => {
           if (res.error) throw res.error;
           return res.data;
         })
     );
-    const existingProfile: any = existingProfileResult as any;
 
     if (!existingProfile || !existingProfile.name || existingProfile.name.trim() === '') {
       //console.log('Profile missing or has empty name, creating/updating...');
@@ -47,7 +46,7 @@ export const profilesService = {
             name: fallbackName || 'User',
             bio: '',
           }, { onConflict: 'id' })
-          .then((res: any) => {
+          .then((res) => {
             if (res.error) throw res.error;
             return res.data;
           })
@@ -76,7 +75,7 @@ export const profilesService = {
     //console.log('Skipping auth metadata updates - using profiles table only');
 
     // Update profiles table (for name, bio, avatar, social links, etc.)
-    const profileUpdates: any = {};
+    const profileUpdates: Partial<ProfileUpdateData & { id: string }> = {};
     if (updates.name) profileUpdates.name = updates.name;
     if (updates.bio !== undefined) profileUpdates.bio = updates.bio;
     if (updates.avatar_url) profileUpdates.avatar_url = updates.avatar_url;
@@ -98,7 +97,7 @@ export const profilesService = {
           .from('profiles')
           .upsert(upsertData, { onConflict: 'id' })
           .select()
-          .then((res: any) => {
+          .then((res) => {
             if (res.error) throw res.error;
             return res.data;
           })
@@ -117,7 +116,7 @@ export const profilesService = {
           .select('id, name, avatar_url, bio')
           .eq('id', userId)
           .single()
-          .then((res: any) => {
+          .then((res) => {
             if (res.error) throw res.error;
             return res.data;
           })
@@ -141,7 +140,7 @@ export const profilesService = {
       supabase
         .from('follows')
         .insert([{ follower_id: followerId, followee_id: followeeId }])
-        .then((res: any) => {
+        .then((res) => {
           if (res.error) throw res.error;
           return res.data;
         })
@@ -174,7 +173,7 @@ export const profilesService = {
         .delete()
         .eq('follower_id', followerId)
         .eq('followee_id', followeeId)
-        .then((res: any) => {
+        .then((res) => {
           if (res.error) throw res.error;
           return res.data;
         })

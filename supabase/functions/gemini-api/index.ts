@@ -152,7 +152,14 @@ function buildQuizPrompt(plainText: string, numQuestions: number): string {
     ].join('\n')
 }
 
-function parseQuizResponse(text: string): any[] {
+interface QuizQuestion {
+    question: string;
+    options: string[];
+    correctAnswer: number;
+    explanation?: string;
+}
+
+function parseQuizResponse(text: string): QuizQuestion[] {
     if (!text) return []
     const jsonMatch = text.match(/\{[\s\S]*\}/)
     const jsonRaw = jsonMatch ? jsonMatch[0] : text
@@ -160,9 +167,9 @@ function parseQuizResponse(text: string): any[] {
     let parsed: any
     try {
         parsed = JSON.parse(jsonRaw)
-    } catch (e) {
+    } catch (_e) {
         const sanitized = jsonRaw.replace(/```json|```/g, '').replace(/\n/g, '\n')
-        try { parsed = JSON.parse(sanitized) } catch (e) { parsed = {} }
+        try { parsed = JSON.parse(sanitized) } catch (_e) { parsed = {} }
     }
 
     const questions = Array.isArray(parsed?.questions) ? parsed.questions : []
@@ -243,7 +250,7 @@ function parseOrganizeResponse(text: string, originalHtml: string): { optimizedH
         try {
             parsed = JSON.parse(candidate)
             if (parsed && typeof parsed === 'object') break
-        } catch (e) {
+        } catch (_e) {
             continue
         }
     }

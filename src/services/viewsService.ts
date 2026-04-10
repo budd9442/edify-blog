@@ -30,18 +30,7 @@ export const viewsService = {
 
         // If view was tracked, let's also check the current view count
         if (res.data === true) {
-          //console.log('🔍 [VIEWS DEBUG] View was tracked, checking current view count...');
-          const { data: articleData, error: articleError } = await supabase
-            .from('articles')
-            .select('views')
-            .eq('id', articleId)
-            .single();
-
-          if (articleError) {
-            console.error('❌ [VIEWS DEBUG] Failed to fetch updated view count:', articleError);
-          } else {
-            //console.log('📊 [VIEWS DEBUG] Current view count in database:', articleData.views);
-          }
+          // View tracking succeeded
         }
 
         if (res.data) {

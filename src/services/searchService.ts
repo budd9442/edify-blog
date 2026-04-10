@@ -6,11 +6,6 @@ interface SearchHistoryItem {
   timestamp: number;
 }
 
-interface TrendingSearch {
-  query: string;
-  count: number;
-}
-
 class SearchService {
   private readonly SEARCH_HISTORY_KEY = 'edify_search_history';
   private readonly MAX_HISTORY_ITEMS = 10;
